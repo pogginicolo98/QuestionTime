@@ -1,0 +1,17 @@
+<!-- Login page -->
+
+{% extends "auth_layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>Log in</h1>
+    <div class="login-form-container">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <buttn
+            type="submit"
+            class="btn btn-sm btn-outline-primary"
+            >Log in
+        </buttn>
+    </div>
+{% endblock %}

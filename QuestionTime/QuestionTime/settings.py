@@ -69,7 +69,7 @@ ROOT_URLCONF = 'QuestionTime.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -140,24 +140,31 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# Setting custom user model
+# Custom user settings
 AUTH_USER_MODEL = 'users.CustomUser'
 
 
-# Settings for 'django-crispy-forms' app
+# 'django-crispy-forms' app settings
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
-# Settings for 'django.contrib.sites' app
+# 'django.contrib.sites' app settings
 SITE_ID = 1
 
 
-# Settings for 'django-allauth' app
+# 'django-allauth' app settings
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_EMAIL_REQUIRED = (True)
 
 
-# Authentication urls
+# Authentication settings
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
