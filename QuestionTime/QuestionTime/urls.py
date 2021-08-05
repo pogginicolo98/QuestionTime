@@ -13,8 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from core.views import IndexTemplateView
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django_registration.backends.one_step.views import RegistrationView
 from users.forms import CustomUserForm
 
@@ -41,4 +42,7 @@ urlpatterns = [
     # Token authentication
     path('api/rest-auth/', include('rest_auth.urls')),
     path('api/rest-auth/registration/', include('rest_auth.registration.urls')),
+
+    # Homepage
+    re_path(r"^.*$", IndexTemplateView.as_view(), name='entry-point')  # Accept all kind of urls
 ]
