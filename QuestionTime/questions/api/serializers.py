@@ -61,7 +61,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         return instance.answers.count()
 
     def get_user_has_answered(self, instance):
-        request = self.context.get('response')
+        request = self.context.get('request')
         return instance.answers.filter(author=request.user).exists()
 
     def get_created_at(self, instance):

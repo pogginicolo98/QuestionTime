@@ -46,6 +46,9 @@ urlpatterns = [
     # User endpoints
     path('api/', include('users.api.urls')),
 
+    # Questions endpoints
+    path('api/', include('questions.api.urls')),
+
     # Homepage
     re_path(r"^.*$", IndexTemplateView.as_view(), name='entry-point')  # Accept all kind of urls
 ]

@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from questions.api.permissions import IsAuthorOrReadOnly
 from questions.api.serializers import QuestionSerializer
 from questions.models import Question
@@ -12,14 +13,14 @@ class QuestionViewSet(viewsets.ModelViewSet):
     - Update a specific Question instance.
     - Delete a specific Question instance.
 
-    * Only authenticated users can retrieve a list of all Question instances or a specific one. (DEFAULT_PERMISSION_CLASSES in settings.py)
-    * Users can update/delete only their own Question instances. (permission class IsAuthorOrReadOnly)
+    * Only authenticated users can retrieve a list of all Question instances or a specific one.
+    * Users can update/delete only their own Question instances.
     """
 
     queryset = Question.objects.all().order_by('-updated_at')
     lookup_field = "slug"
     serializer_class = QuestionSerializer
-    permission_classes = IsAuthorOrReadOnly
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
