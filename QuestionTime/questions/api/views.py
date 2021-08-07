@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, viewsets
+from rest_framework import generics, status, viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from questions.api.permissions import IsAuthorOrReadOnly
 from questions.api.serializers import AnswerSerializer, QuestionSerializer
 from questions.models import Answer, Question
@@ -75,7 +77,7 @@ class QuestionAnswerListAPIView(generics.ListAPIView):
 
 class AnswerRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
-    An APIView that provides 'retrieve()', 'update()', 'delete()' actions.
+    An APIView that provides 'retrieve()', 'update()' and 'delete()' actions.
     - Retrieve a specific Answer.
     - Update a specific Answer.
     - Delete a specific Answer.
@@ -87,3 +89,36 @@ class AnswerRUDAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
     permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
+
+
+class AnswerLikeAPIView(APIView):
+    """
+    An APIView that provides 'post()' and 'delete()' actions.
+    - Add a vote on a specific Answer.
+    - remove the vote on a specific Answer.
+
+    * Only authenticated users can perform any action.
+    """
+
+    serializer_class = AnswerSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        answer = get_object_or_404(Answer, pk=pk)
+        user = request.user
+
+        answer.voters.add(user)
+        answer.save()
+        serializer_context = {'request': request}
+        serializer = self.serializer_class(answer, context=serializer_context)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        answer = get_object_or_404(Answer, pk=pk)
+        user = request.user
+
+        answer.voters.remove(user)
+        answer.save()
+        serializer_context = {'request': request}
+        serializer = self.serializer_class(answer, context=serializer_context)
+        return Response(serializer.data, status.HTTP_204_NO_CONTENT)
