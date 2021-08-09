@@ -1,15 +1,16 @@
 <!-- Homepage template -->
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>QuestionTime</title>
-  </head>
-  <body>
-    <h1>Vue.JS</h1>
-    <div id="app">
+{% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
 
-    </div>
-  </body>
-</html>
+{% block content %}
+  <noscript>
+    <p class="container text-center mt-5">
+      <strong>
+        This site uses JavaScript content, if you are seeing this message it has probably been disabled by your browser settings. Please enable JavaScript content if you wish to access the site.
+      </strong>
+    </p>
+  </noscript>
+  <div id="app"></div>
+  {% render_bundle 'app' %}
+{% endblock %}

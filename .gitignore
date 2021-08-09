@@ -1,4 +1,11 @@
 # Project exclude paths
 /.idea/
 /venv/
+/QuestionTime/front-end/node_modules/.cache/
 /QuestionTime/password.py
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

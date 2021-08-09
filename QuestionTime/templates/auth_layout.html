@@ -1,33 +1,54 @@
 <!-- Base template for authentication pages -->
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>QuestionTime</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
-          integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
-          crossorigin="anonymous">
+{% block style %}
+  <style>
+    html, body {
+      height: 100%;
+      font-family: 'Playfair Display', serif;
+    }
 
-    <style>
-      .login-form-container {
-        width: 300px;
-        margin: auto;
-      }
+    .asteriskField {
+        display: none;
+    }
 
-      .registration-form-container {
-        width: 400px;
-        margin: auto;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Dynamic content -->
+    .btn:focus {
+      box-shadow: none !important;
+    }
+
+    .auth-box {
+      border: 3px solid lightgrey;
+      border-radius: 10px;
+      padding-top: 25px;
+      padding-bottom: 25px;
+      width: 550px;
+      margin: auto;
+    }
+
+    .login-form-container {
+      padding-top: 5px;
+      width: 300px;
+      margin: auto;
+    }
+
+    .registration-form-container {
+      padding-top: 5px;
+      width: 300px;
+      margin: auto;
+    }
+
+    .outer-area {
+      margin-top: 75px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="outer-area">
     <div class="auth-box text-center">
-      {% block content %}
+      {% block auth %}
       {% endblock %}
     </div>
-  </body>
-</html>
+  </div>
+{% endblock %}
