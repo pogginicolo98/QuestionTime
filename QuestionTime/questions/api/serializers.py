@@ -48,7 +48,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     """
 
     author = serializers.StringRelatedField(read_only=True)
-    answer_count = serializers.SerializerMethodField(read_only=True)
+    answers_count = serializers.SerializerMethodField(read_only=True)
     user_has_answered = serializers.SerializerMethodField(read_only=True)
     slug = serializers.SlugField(read_only=True)
     created_at = serializers.SerializerMethodField(read_only=True)
@@ -57,7 +57,7 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         exclude = ['updated_at']
 
-    def get_answer_count(self, instance):
+    def get_answers_count(self, instance):
         return instance.answers.count()
 
     def get_user_has_answered(self, instance):
