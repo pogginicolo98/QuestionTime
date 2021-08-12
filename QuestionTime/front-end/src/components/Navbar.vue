@@ -30,7 +30,7 @@
             <router-link
               :to="{ name: 'question-editor' }"
               class="btn btn-sm btn-danger mr-1"
-              >Answer
+              >New question
             </router-link>
           </li>
           <li class="nav-item">

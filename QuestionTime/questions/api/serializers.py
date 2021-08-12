@@ -18,6 +18,7 @@ class AnswerSerializer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField(read_only=True)
     user_has_voted = serializers.SerializerMethodField(read_only=True)
     created_at = serializers.SerializerMethodField(read_only=True)
+    question_slug = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Answer
@@ -32,6 +33,9 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     def get_created_at(self, instance):
         return instance.created_at.strftime('%d %B %Y')
+
+    def get_question_slug(self, instance):
+        return instance.question.slug
 
 
 class QuestionSerializer(serializers.ModelSerializer):

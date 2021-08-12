@@ -19,6 +19,20 @@
           <hr>
         </div>
       </div>
+      <div class="my-4 text-center" >
+        <div v-show="loadingQuestions">
+          <div class="spinner-border text-danger mt-3"
+               style="width: 3rem; height: 3rem;"
+               role="status">
+          </div>
+        </div>
+        <button
+          v-show="next"
+          @click="getQuestions"
+          class="btn btn-danger mt-4">
+          Show more
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -31,15 +45,27 @@ export default {
   name: "Home",
   data() {
     return {
-      questions: []
+      questions: [],
+      next: null,
+      loadingQuestions: false
     };
   },
   methods: {
     getQuestions() {
       let endpoint = "/api/questions/";
+      if (this.next) {
+        endpoint = this.next;
+      }
+      this.loadingQuestions = true;
       apiService(endpoint)
-        .then(data => {
-          this.questions.push(...data.results);
+        .then(questions_data => {
+          this.questions.push(...questions_data.results);
+          this.loadingQuestions = false;
+          if (questions_data.next) {
+            this.next = questions_data.next;
+          } else {
+            this.next = null;
+          }
         });
     }
   },
@@ -50,7 +76,7 @@ export default {
 };
 </script>
 
-<style lang="css" scoped>
+<style lang="css">
   .author-name {
     font-weight: bold;
     color: #DC3545;
