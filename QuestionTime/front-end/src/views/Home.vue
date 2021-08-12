@@ -58,11 +58,11 @@ export default {
       }
       this.loadingQuestions = true;
       apiService(endpoint)
-        .then(questions_data => {
-          this.questions.push(...questions_data.results);
+        .then(questionsData => {
+          this.questions.push(...questionsData.results);
           this.loadingQuestions = false;
-          if (questions_data.next) {
-            this.next = questions_data.next;
+          if (questionsData.next) {
+            this.next = questionsData.next;
           } else {
             this.next = null;
           }

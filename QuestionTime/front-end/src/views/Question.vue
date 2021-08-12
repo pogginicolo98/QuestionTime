@@ -2,6 +2,10 @@
   <div class="single-question mt-2">
     <div class="container">
       <h1>{{ question.content }}</h1>
+      <QuestionActionsComponent
+        v-if="isOwner"
+        :slug="slug"
+      />
       <p class="mb-0">
         Question written by:
         <span class="author-name">{{ question.author }}</span>
@@ -67,6 +71,7 @@
 // @ is an alias to /src
 import { apiService } from "@/common/api.service.js";
 import AnswerComponent from "@/components/Answer.vue";
+import QuestionActionsComponent from "@/components/QuestionActions.vue";
 
 export default {
   name: 'Question',
@@ -77,7 +82,8 @@ export default {
     }
   },
   components: {
-    AnswerComponent
+    AnswerComponent,
+    QuestionActionsComponent
   },
   data() {
     return {
@@ -92,6 +98,11 @@ export default {
       requestUser: null
     };
   },
+  computed: {
+    isOwner() {
+      return this.question.author === this.requestUser;
+    }
+  },
   methods: {
     setPageTitle(title) {
       document.title = title;
@@ -102,10 +113,10 @@ export default {
     getQuestionData() {
       let endpoint = `/api/questions/${this.slug}/`
       apiService(endpoint)
-        .then(question_data => {
-          this.question = question_data;
-          this.userHasAnswered = question_data.user_has_answered;
-          this.setPageTitle(question_data.content);
+        .then(questionData => {
+          this.question = questionData;
+          this.userHasAnswered = questionData.user_has_answered;
+          this.setPageTitle(questionData.content);
         });
     },
     getQuestionAnswers() {
@@ -115,11 +126,11 @@ export default {
       }
       this.loadingAnswers = true;
       apiService(endpoint)
-        .then(answers_data => {
-          this.answers.push(...answers_data.results);
+        .then(answersData => {
+          this.answers.push(...answersData.results);
           this.loadingAnswers = false;
-          if (answers_data.next) {
-            this.next = answers_data.next;
+          if (answersData.next) {
+            this.next = answersData.next;
           } else {
             this.next = null;
           }
@@ -131,8 +142,8 @@ export default {
         let method = "POST";
         let data = { body: this.newAnswerBody };
         apiService(endpoint, method, data)
-          .then(answer_data => {
-            this.answers.push(answer_data);
+          .then(answerData => {
+            this.answers.push(answerData);
           });
         this.newAnswerBody = null;
         this.showForm = false;

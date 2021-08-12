@@ -5,7 +5,7 @@
         <h1 class="mb-3">Edit your answer</h1>
         <form @submit.prevent="onSubmit">
           <textarea
-            v-model="answer_body"
+            v-model="answerBody"
             class="form-control"
             rows="3">
           </textarea>
@@ -29,11 +29,11 @@ export default {
       type: Number,
       required: true
     },
-    answer_edit: {
+    previousAnswer: {
       type: String,
       required: true
     },
-    question_slug: {
+    questionSlug: {
       type: String,
       required: true
     }
@@ -41,29 +41,29 @@ export default {
   async beforeRouteEnter(to, from, next) {
     let endpoint = `/api/answers/${to.params.id}/`;
     await apiService(endpoint)
-            .then(answer_data => {
-              to.params.answer_edit = answer_data.body;
-              to.params.question_slug = answer_data.question_slug;
+            .then(answerData => {
+              to.params.previousAnswer = answerData.body;
+              to.params.questionSlug = answerData.question_slug;
             });
     return next();
   },
   data() {
     return {
-      answer_body: this.answer_edit,
+      answerBody: this.previousAnswer,
       error: null
     }
   },
   methods: {
     onSubmit() {
-      if (this.answer_body) {
+      if (this.answerBody) {
         let endpoint = `/api/answers/${this.id}/`;
         let method = "PUT";
-        let data = { body: this.answer_body };
+        let data = { body: this.answerBody };
         apiService(endpoint, method, data)
           .then(() => {
             this.$router.push({
               name: "question",
-              params: { slug: this.question_slug }
+              params: { slug: this.questionSlug }
             });
           })
       } else {

@@ -5,7 +5,7 @@
         <h1 class="mb-3">Ask a new question</h1>
         <form @submit.prevent="onSubmit">
           <textarea
-            v-model="question_body"
+            v-model="questionBody"
             class="form-control"
             rows="3"
             placeholder="Your question...">
@@ -25,27 +25,51 @@ import { apiService } from "@/common/api.service.js";
 
 export default {
   name: "QuestionEditor",
+  props: {
+    slug: {
+      type: String,
+      required: false
+    },
+    previousQuestion: {
+      type: String,
+      required: false
+    }
+  },
   data() {
     return {
-      question_body: null,
+      questionBody: this.previousQuestion || null,
       error: null
     }
   },
+  async beforeRouteEnter(to, from, next) {
+    if(to.params.slug !== undefined) {
+      let endpoint = `/api/questions/${to.params.slug}/`;
+      await apiService(endpoint)
+              .then(questionData => {
+                to.params.previousQuestion = questionData.content;
+              });
+    }
+    return next();
+  },
   methods: {
     onSubmit() {
-      if (!this.question_body) {
+      if (!this.questionBody) {
         this.error = "The question cannot be empty.";
-      } else if (this.question_body.length > 240) {
-        this.error = `The question is too long. ${this.question_body.length}/240 characters.`;
+      } else if (this.questionBody.length > 240) {
+        this.error = `The question is too long. ${this.questionBody.length}/240 characters.`;
       } else {
         let endpoint = "/api/questions/";
         let method = "POST";
-        let data = { content: this.question_body };
+        if(this.previousQuestion) {
+          endpoint += `${this.slug}/`;
+          method = "PUT";
+        }
+        let data = { content: this.questionBody };
         apiService(endpoint, method, data)
-          .then(question_data => {
+          .then(questionData => {
             this.$router.push({
               name: "question",
-              params: { slug: question_data.slug }
+              params: { slug: questionData.slug }
             });
           });
       }
