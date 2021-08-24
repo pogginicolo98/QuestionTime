@@ -1,11 +1,7 @@
-<!-- Homepage template - Production -->
+<!-- Homepage template - Development -->
 
 {% extends "base.html" %}
-{% load static %}
-
-{% block style %}
-  <link href="{% static 'bundle.css' %}" rel="stylesheet">
-{% endblock %}
+{% load render_bundle from webpack_loader %}
 
 {% block content %}
   <noscript>
@@ -16,8 +12,5 @@
     </p>
   </noscript>
   <div id="app"></div>
-{% endblock %}
-
-{% block script %}
-  <script src="{% static 'bundle.js' %}"></script>
+  {% render_bundle 'app' %}
 {% endblock %}
