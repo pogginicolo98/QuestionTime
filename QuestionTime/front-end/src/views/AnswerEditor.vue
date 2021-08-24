@@ -1,5 +1,9 @@
 <template lang="html">
-  <div class="container">
+  <div v-if="notFound" class="container">
+    <h1 class="notFound">Answer not found!</h1>
+  </div>
+
+  <div v-else class="container">
     <div class="row">
       <div class="col-12">
         <h1 class="mb-3">Edit your answer</h1>
@@ -36,6 +40,10 @@ export default {
     questionSlug: {
       type: String,
       required: true
+    },
+    answerNotFound: {
+      type: String,
+      required: false
     }
   },
   async beforeRouteEnter(to, from, next) {
@@ -44,6 +52,7 @@ export default {
             .then(answerData => {
               to.params.previousAnswer = answerData.body;
               to.params.questionSlug = answerData.question_slug;
+              to.params.answerNotFound = answerData.detail;
             });
     return next();
   },
@@ -51,6 +60,11 @@ export default {
     return {
       answerBody: this.previousAnswer,
       error: null
+    }
+  },
+  computed: {
+    notFound() {
+      return this.answerNotFound;
     }
   },
   methods: {

@@ -1,5 +1,9 @@
 <template lang="html">
-  <div class="container">
+  <div v-if="notFound" class="container">
+    <h1 class="notFound">Question not found!</h1>
+  </div>
+  
+  <div v-else class="container">
     <div class="row">
       <div class="col-12">
         <h1 class="mb-3">Ask a new question</h1>
@@ -33,6 +37,10 @@ export default {
     previousQuestion: {
       type: String,
       required: false
+    },
+    questionNotFound: {
+      type: String,
+      required: false
     }
   },
   data() {
@@ -47,9 +55,15 @@ export default {
       await apiService(endpoint)
               .then(questionData => {
                 to.params.previousQuestion = questionData.content;
+                to.params.questionNotFound = questionData.detail;
               });
     }
     return next();
+  },
+  computed: {
+    notFound() {
+      return this.questionNotFound;
+    }
   },
   methods: {
     onSubmit() {

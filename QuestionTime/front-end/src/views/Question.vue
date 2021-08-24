@@ -1,6 +1,10 @@
 <template lang="html">
   <div class="single-question mt-2">
-    <div class="container">
+    <div v-if="notFound" class="container">
+      <h1 class="notFound">Question not found!</h1>
+    </div>
+
+    <div v-else class="container">
       <h1>{{ question.content }}</h1>
       <QuestionActionsComponent
         v-if="isOwner"
@@ -101,6 +105,9 @@ export default {
   computed: {
     isOwner() {
       return this.question.author === this.requestUser;
+    },
+    notFound() {
+      return this.question.detail;
     }
   },
   methods: {
@@ -160,7 +167,8 @@ export default {
       let method = "DELETE";
       try {
         await apiService(endpoint, method)
-        this.answers.splice(this.answers.indexOf(answer), 1);
+        // this.answers.splice(this.answers.indexOf(answer), 1);
+        this.$delete(this.answers, this.answers.indexOf(answer));
         this.userHasAnswered = false;
       }
       catch (err) {
